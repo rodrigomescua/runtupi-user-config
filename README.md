@@ -4,15 +4,23 @@ This is the repository for my Custom Tipi user-config.
 
 ## Table of contents
 
-- [Overview](#overview)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Getting started](#getting-started)
-- [Running as Service](#running-as-service)
-- [Documentation](#documentation)
-- [Contribution](#contribution)
-- [Contact](#contact)
-- [License](#license)
+- [user-configs](#user-configs)
+  - [Table of contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Getting started](#getting-started)
+  - [Running as Service](#running-as-service)
+    - [Create a Systemd Service](#create-a-systemd-service)
+    - [Enable and Start the Service](#enable-and-start-the-service)
+    - [Verify Functionality](#verify-functionality)
+    - [Reboot Test](#reboot-test)
+    - [Troubleshooting](#troubleshooting)
+  - [Tips](#tips)
+  - [Documentation](#documentation)
+  - [Contribution](#contribution)
+  - [Contact](#contact)
+  - [License](#license)
 
 ## Overview
 
@@ -22,10 +30,12 @@ This is the repository for my Custom Tipi user-config.
 
 Runtipi is aimed at the use behind and via a VPN and or tunnel.
 This repo contains a opinionated user-config that aims at having Runtipi:
+
 - being used with a direct connection to the internet behind a NAT router
 - having advanced configuration like SSO/MFA, IP restrictions etc.
 
 Placeholders used in this guide, app specific descriptions and in *.example files:
+
 - example.com: actual domain name
 - 192.168.1.0/24: actual private ip address range
 
@@ -36,11 +46,11 @@ Placeholders used in this guide, app specific descriptions and in *.example file
 - installed [crowdsec](https://github.com/crowdsecurity/crowdsec) app and a [account](https://www.crowdsec.net/)
 - a domain managed via [Cloudflare](https://cloudflare.com) DNS with a wildcard entry (ie *.example.com) pointing at your  public IP address
 
-
 It is also a good measure to follow up on OS hardening.
 This highly depends on the used host OS and the hosting itself and is not part of this repo.
 
 Since this comes up a lot, here are still 2 things related to security, when Runtipi is used directly on the internet:
+
 - [ufw on ubuntu](https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#problem):
   > But when Docker is installed, Docker bypass the UFW rules and the published ports can be accessed from outside
   - follow the steps from the link above
@@ -137,40 +147,89 @@ sudo ./runtipi-cli start --env-file user-config/tipi-compose.env
 
 ## Running as Service
 
-```bash
-sudo vim /etc/systemd/system/tipi.service
-```
+### Create a Systemd Service
 
-```
+Create `/etc/systemd/system/tipi.service`:
+
+```ini
 [Unit]
-Description=Runtipi service
-Requires=docker.service multi-user.target
+Description=Tipi CLI Starter
+Requires=docker.service
 After=docker.service network-online.target
+Wants=network-online.target
 
 [Service]
-Restart=always
+Type=oneshot
+WorkingDirectory=/home/USERNAME/runtipi
+# Ensure existing containers are stopped first
+ExecStartPre=/home/USERNAME/runtipi/runtipi-cli stop || true
+# Start with custom env-file
+ExecStart=/home/USERNAME/runtipi/runtipi-cli start --env-file /home/USERNAME/runtipi/user-config/tipi-compose.env
+ExecStop=/home/USERNAME/runtipi/runtipi-cli stop
 RemainAfterExit=yes
-WorkingDirectory=/home/user/runtipi
-ExecStart=/home/user/runtipi/runtipi-cli start --env-file /home/user/runtipi/user-config/tipi-compose.env
-ExecStop=/home/user/runtipi/runtipi-cli stop
+TimeoutStartSec=600
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 [Install]
 WantedBy=multi-user.target
 ```
 
+Replace `USERNAME` with your actual user.
+
+### Enable and Start the Service
+
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable tipi.service
-sudo systemctl start tipi.service
-sudo systemctl status tipi.service
-journalctl -u tipi.service -f
+sudo systemctl enable tipi
+sudo systemctl start tipi
 ```
 
-## Tipps
+### Verify Functionality
+
+Check that the containers are running and healthy:
+
+```bash
+docker ps --filter "name=runtipi"
+docker inspect runtipi --format '{{json .State.Health}}' | jq
+```
+
+You should see `Status: "healthy"` for `runtipi` and `runtipi-db`.
+(`runtipi-queue` does not have a healthcheck.)
+
+Check that your custom environment file was loaded:
+
+```bash
+docker exec -it runtipi printenv | grep WILDCARD_DOMAIN
+```
+
+### Reboot Test
+
+Reboot the server and ensure:
+
+- `systemctl status tipi` shows `active (exited)` after boot.
+- `docker ps` shows `runtipi`, `runtipi-db`, and `runtipi-queue` running.
+- Web UI becomes reachable after a short time.
+
+### Troubleshooting
+
+- **Containers conflict after reboot?**
+  This usually means Docker restarted them on its own.
+  Re-run the `docker update --restart=no ...` commands.
+- **Web UI not available immediately?**
+  Wait up to \~30 seconds for healthcheck to go `healthy`.
+  Use:
+
+  ```bash
+  docker inspect runtipi --format '{{json .State.Health}}' | jq
+  ```
+
+  until status is `healthy`.
+
+## Tips
 
 start tipi app without tipi
 
-```
+```bash
 docker compose --env-file app-data/crowdsec/app.env --env-file user-config/crowdsec/app.env --project-name crowdsec -f apps/crowdsec/docker-compose.yml -f repos/c5e7315954cfe5ab1eb1bf360ebada23b6a406ae66ae1e997854ad823f29aa7d/apps/docker-compose.common.yml --file user-config/crowdsec/docker-compose.yml up --detach --force-recreate --remove-orphans
 ```
 
