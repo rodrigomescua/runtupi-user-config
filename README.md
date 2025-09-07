@@ -243,6 +243,7 @@ docker compose --env-file app-data/crowdsec/app.env --env-file user-config/crowd
     - [Bookstack](./falkheiland/bookstack/)
     - [Crowdsec](./falkheiland/crowdsec/)
     - [Cup](./falkheiland/cup/)
+    - [Dawarich](./falkheiland/dawarich/)
     - [DDNS-Updater-CF](./falkheiland/ddns-updater-cf/)
     - [docker-db-backup](./falkheiland/docker-db-backup/)
     - [Dozzle](./falkheiland/dozzle/)
