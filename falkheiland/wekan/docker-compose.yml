@@ -8,6 +8,7 @@ services:
       traefik.http.routers.wekan-falkheiland.middlewares: chain-Domain-auth@file
       # Use the default certresolver
       traefik.http.routers.wekan-falkheiland.tls.certresolver: ''
+      cupdate.config.pin: true
 
   wekan-db:
     # Ensure the image is not pulled if present
@@ -16,6 +17,8 @@ services:
       # This network is shared with the docker-db-backup app
       shared_docker-db-backup_network:
         gw_priority: 0
+    labels:
+      cupdate.config.stay-on-current-major: true
 
 networks:
   # This network is shared with the docker-db-backup app
