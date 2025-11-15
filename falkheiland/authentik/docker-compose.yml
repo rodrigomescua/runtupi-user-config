@@ -16,6 +16,7 @@ services:
   authentik-worker:
     # Ensure the image is not pulled if present
     pull_policy: missing
+    user: "1000:999"
 
   authentik-db:
     # Ensure the image is not pulled if present
