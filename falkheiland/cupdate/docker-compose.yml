@@ -1,0 +1,12 @@
+services:
+  cupdate:
+    # Ensure the image is not pulled if present
+    pull_policy: missing
+    volumes:
+      - ${APP_DATA_DIR}/data/cupdate-tmp:/tmp
+    labels:
+      # Websecure
+      # Use the chain-Domain-auth middleware for domain handling
+      traefik.http.routers.cupdate-falkheiland.middlewares: chain-Domain-auth@file
+      # Use the default certresolver
+      traefik.http.routers.cupdate-falkheiland.tls.certresolver: ''
