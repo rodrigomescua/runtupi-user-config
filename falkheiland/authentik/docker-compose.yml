@@ -27,10 +27,6 @@ services:
     labels:
       cupdate.config.stay-on-current-major: true
 
-  authentik-redis:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
-
 networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
