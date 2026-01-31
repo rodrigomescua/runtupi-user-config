@@ -1,11 +1,5 @@
 services:
-  nextcloud:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
-
   nextcloud-web:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     labels:
       # Websecure
       # Use the chain-Domain middleware for domain handling
@@ -13,17 +7,7 @@ services:
       # Use the default certresolver
       traefik.http.routers.nextcloud-fpm-falkheiland.tls.certresolver: ''
 
-  nextcloud-cron:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
-
-  nextcloud-redis:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
-
   nextcloud-db:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     networks:
       # This network is shared with the docker-db-backup app
       shared_docker-db-backup_network:

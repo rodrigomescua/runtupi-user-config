@@ -1,11 +1,5 @@
 services:
   crowdsec:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     ports:
     # TODO: Remove this port mapping when tipi is supporting it when no exposable and no gui
       - "8081:8080"
-
-  crowdsec-bouncer-traefik:
-    # Ensure the image is not pulled if present
-    pull_policy: missing

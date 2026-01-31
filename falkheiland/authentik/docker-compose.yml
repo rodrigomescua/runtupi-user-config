@@ -1,7 +1,5 @@
 services:
   authentik:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     labels:
       # Websecure
       # Enable catchall domain handling for all services / tipi apps
@@ -13,13 +11,8 @@ services:
       traefik.http.routers.authentik-falkheiland.middlewares: chain-Domain@file
       # Use the default certresolver
       traefik.http.routers.authentik-falkheiland.tls.certresolver: ''
-  authentik-worker:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
 
   authentik-db:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     networks:
       # This network is shared with the docker-db-backup app
       shared_docker-db-backup_network:

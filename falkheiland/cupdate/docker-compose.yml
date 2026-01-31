@@ -1,7 +1,5 @@
 services:
   cupdate:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     volumes:
       - ${APP_DATA_DIR}/data/cupdate-tmp:/tmp
     labels:

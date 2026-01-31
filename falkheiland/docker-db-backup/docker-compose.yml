@@ -1,7 +1,5 @@
 services:
   docker-db-backup:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     environment:
       # Environment variables for the database backups
       # DB01 tipi

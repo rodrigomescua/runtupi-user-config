@@ -1,7 +1,5 @@
 services:
   vaultwarden:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling

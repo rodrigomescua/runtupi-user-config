@@ -1,7 +1,5 @@
 services:
   paperless-ngx-webserver:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     volumes:
       # Use custom data directories (todo: configure in tipi-app settings)
       - ${APP_USER_DATA_DIR}/tipi/paperlessngx/media:/usr/src/paperless/media
@@ -48,25 +46,12 @@ services:
       # Use the default certresolver
       traefik.http.routers.paperless-ngx-falkheiland-privip.tls.certresolver: ''
 
-  paperless-ngx-broker:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
-
   paperless-ngx-db:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
+
     networks:
       # This network is shared with the docker-db-backup app
       shared_docker-db-backup_network:
         gw_priority: 0
-
-  paperless-ngx-gotenberg:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
-
-  paperless-ngx-tika:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
 
 networks:
   # This network is shared with the docker-db-backup app

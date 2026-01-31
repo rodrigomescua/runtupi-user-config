@@ -1,7 +1,5 @@
 services:
   wekan-app:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     labels:
       # Websecure
       # Use the chain-Domain middleware for domain handling
@@ -11,8 +9,6 @@ services:
       cupdate.config.pin: true
 
   wekan-db:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     networks:
       # This network is shared with the docker-db-backup app
       shared_docker-db-backup_network:

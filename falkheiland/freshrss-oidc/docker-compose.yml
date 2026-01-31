@@ -1,7 +1,5 @@
 services:
   freshrss:
-    # Ensure the image is not pulled if present
-    pull_policy: missing
     labels:
       # Websecure
       # Use the freshrss-oidc-falkheiland-M1, freshrss-oidc-falkheiland-M2 and chain-Domain middlewares for domain handling
