@@ -1,0 +1,9 @@
+services:
+  forgejo:
+    labels:
+      # Websecure
+      # Use the chain-Domain-auth middleware for domain handling
+      traefik.http.routers.forgejo-falkheiland.middlewares: chain-Domain-auth@file
+      # Use the default certresolver
+      traefik.http.routers.forgejo-falkheiland.tls.certresolver: ''
+
