@@ -176,6 +176,7 @@ docker compose --env-file app-data/crowdsec/app.env --env-file user-config/crowd
     - [Paperless-ngx](./falkheiland/paperless-ngx/)
     - [Pinchflat](./falkheiland/pinchflat/)
     - [SearXNG](./falkheiland/searxng/)
+    - [Sure](./falkheiland/sure/)
     - [Surmai](./falkheiland/surmai/)
     - [Uptime Kuma](./falkheiland/uptime-kuma/)
     - [Vaultwarden](./falkheiland/vaultwarden/)
