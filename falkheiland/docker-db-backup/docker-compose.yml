@@ -60,6 +60,12 @@ services:
       - DB10_TYPE=mongo
       - DB10_HOST=wekan-db
       - DB10_NAME=wekan
+      # DB11 sure
+      - DB11_TYPE=pgsql
+      - DB11_HOST=sure-db
+      - DB11_NAME=sure_production
+      - DB11_USER=sure_user
+      - DB11_PASS=${SURE_DB_PASSWORD}
     networks:
       # The network to connect to the shared docker-db-backup network
       shared_docker-db-backup_network:
