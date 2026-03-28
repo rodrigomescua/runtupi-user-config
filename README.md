@@ -139,6 +139,45 @@ sudo ./runtipi-cli start
 - start each app after making above settings
 - test the app
 
+## Configuration Patterns
+
+### Traefik Middleware Chains
+
+The core of this setup is a set of Traefik middleware chains defined in `traefik/etc/dynamic/dynamic.yml`:
+
+| Chain | Usage |
+|---|---|
+| `chain-Domain-auth@file` | Internet-facing apps — geoblock + rate limit + security headers + Authentik ForwardAuth |
+| `chain-Domain@file` | Internet-facing apps with own auth (e.g. Nextcloud) — no ForwardAuth |
+| `chain-localDomain-auth@file` | Local network access + Authentik ForwardAuth |
+| `chain-localDomain@file` | Local network only, no auth |
+
+### Per-App Override Pattern
+
+Each app gets a `falkheiland/<app>/docker-compose.yml` that overrides the Traefik labels Runtipi generates. The router name format is always `<app-id>-<username>` (e.g. `jellyfin-falkheiland`).
+
+Minimal override for an internet-exposed app with Authentik ForwardAuth:
+
+```yaml
+services:
+  <app-id>:
+    labels:
+      traefik.http.routers.<app-id>-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.<app-id>-falkheiland.tls.certresolver: ''
+```
+
+For apps that need both internet access (with auth) and unauthenticated local network access, add a `-privip` router variant:
+
+```yaml
+services:
+  <app-id>:
+    labels:
+      traefik.http.routers.<app-id>-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.<app-id>-falkheiland.tls.certresolver: ''
+      traefik.http.routers.<app-id>-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.<app-id>-falkheiland-privip.middlewares: chain-Domain@file
+```
+
 ## Tips
 
 start tipi app without tipi
@@ -157,10 +196,12 @@ docker compose --env-file app-data/crowdsec/app.env --env-file user-config/crowd
     - [Bookstack](./falkheiland/bookstack/)
     - [Crowdsec](./falkheiland/crowdsec/)
     - [Cup](./falkheiland/cup/)
+    - [CUPdate](./falkheiland/cupdate/)
     - [Dawarich](./falkheiland/dawarich/)
     - [DDNS-Updater-CF](./falkheiland/ddns-updater-cf/)
     - [docker-db-backup](./falkheiland/docker-db-backup/)
     - [Dozzle](./falkheiland/dozzle/)
+    - [Forgejo](./falkheiland/forgejo/)
     - [Freshrss-OIDC](./falkheiland/freshrss-oidc/)
     - [Home Assistant](./falkheiland/homeassistant/)
     - [Immich](./falkheiland/immich/)
@@ -175,6 +216,7 @@ docker compose --env-file app-data/crowdsec/app.env --env-file user-config/crowd
     - [NocoDB](./falkheiland/nocodb/)
     - [Paperless-ngx](./falkheiland/paperless-ngx/)
     - [Pinchflat](./falkheiland/pinchflat/)
+    - [PruneMate](./falkheiland/prunemate/)
     - [SearXNG](./falkheiland/searxng/)
     - [Sure](./falkheiland/sure/)
     - [Surmai](./falkheiland/surmai/)
