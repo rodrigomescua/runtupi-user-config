@@ -186,6 +186,12 @@ start tipi app without tipi
 docker compose --env-file app-data/crowdsec/app.env --env-file user-config/crowdsec/app.env --project-name crowdsec -f apps/crowdsec/docker-compose.yml -f repos/c5e7315954cfe5ab1eb1bf360ebada23b6a406ae66ae1e997854ad823f29aa7d/apps/docker-compose.common.yml --file user-config/crowdsec/docker-compose.yml up --detach --force-recreate --remove-orphans
 ```
 
+update/recreate traefik container without affecting other containers
+
+```bash
+cd ~/runtipi && docker compose -f docker-compose.yml -f user-config/tipi-compose.yml up -d --no-deps --force-recreate runtipi-reverse-proxy
+```
+
 ## Documentation
 
 - Apps
