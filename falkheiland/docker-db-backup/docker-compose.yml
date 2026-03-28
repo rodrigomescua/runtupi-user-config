@@ -56,7 +56,7 @@ services:
       - DB09_NAME=paperless
       - DB09_USER=paperless
       - DB09_PASS=${PAPERLESS_DB_PASSWORD}
-      # DB09 paperless-ngx
+      # DB10 wekan
       - DB10_TYPE=mongo
       - DB10_HOST=wekan-db
       - DB10_NAME=wekan

@@ -8,6 +8,7 @@ services:
       traefik.http.routers.jellyfin-falkheiland.tls.certresolver: ''
       # WebSecure local IP
       # Use additional router for local access
+      traefik.http.routers.jellyfin-falkheiland-privip.priority: 100
       traefik.http.routers.jellyfin-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
       traefik.http.routers.jellyfin-falkheiland-privip.middlewares: chain-Domain@file
       traefik.http.routers.jellyfin-falkheiland-privip.entrypoints: websecure

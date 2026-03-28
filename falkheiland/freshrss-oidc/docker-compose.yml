@@ -2,7 +2,7 @@ services:
   freshrss:
     labels:
       # Websecure
-      # Use the freshrss-oidc-falkheiland-M1, freshrss-oidc-falkheiland-M2 and chain-Domain middlewares for domain handling
-      traefik.http.routers.freshrss-oidc-falkheiland.middlewares: freshrss-oidc-falkheiland-M1, freshrss-oidc-falkheiland-M2, chain-Domain-auth@file
+      # Use the chain-Domain-auth middleware for domain handling
+      traefik.http.routers.freshrss-oidc-falkheiland.middlewares: chain-Domain-auth@file
       # Use the default certresolver
       traefik.http.routers.freshrss-oidc-falkheiland.tls.certresolver: ''
