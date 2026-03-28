@@ -1,0 +1,16 @@
+services:
+  networking-toolbox:
+    labels:
+      # Websecure
+      # Use the chain-Domain-auth middleware for domain handling
+      traefik.http.routers.networking-toolbox-falkheiland.middlewares: chain-Domain-auth@file
+      # Use the default certresolver
+      traefik.http.routers.networking-toolbox-falkheiland.tls.certresolver: ''
+      # WebSecure local IP
+      # Use additional router for local access
+      traefik.http.routers.networking-toolbox-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.networking-toolbox-falkheiland-privip.middlewares: chain-Domain@file
+      traefik.http.routers.networking-toolbox-falkheiland-privip.entrypoints: websecure
+      traefik.http.routers.networking-toolbox-falkheiland-privip.service: networking-toolbox-falkheiland
+      traefik.http.routers.networking-toolbox-falkheiland-privip.priority: 100
+      traefik.http.routers.networking-toolbox-falkheiland-privip.tls.certresolver: ''

@@ -1,0 +1,16 @@
+services:
+  gharmonize:
+    labels:
+      # Websecure
+      # Use the chain-Domain-auth middleware for domain handling
+      traefik.http.routers.gharmonize-falkheiland.middlewares: chain-Domain-auth@file
+      # Use the default certresolver
+      traefik.http.routers.gharmonize-falkheiland.tls.certresolver: ''
+      # WebSecure local IP
+      # Use additional router for local access
+      traefik.http.routers.gharmonize-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.gharmonize-falkheiland-privip.middlewares: chain-Domain@file
+      traefik.http.routers.gharmonize-falkheiland-privip.entrypoints: websecure
+      traefik.http.routers.gharmonize-falkheiland-privip.service: gharmonize-falkheiland
+      traefik.http.routers.gharmonize-falkheiland-privip.priority: 100
+      traefik.http.routers.gharmonize-falkheiland-privip.tls.certresolver: ''
