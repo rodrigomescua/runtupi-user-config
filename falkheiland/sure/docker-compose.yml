@@ -1,11 +1,23 @@
 services:
   sure:
+    # environment:
+    #   - AI_DEBUG_MODE=true
+    #   - OPENAI_ACCESS_TOKEN=sk-lm-McFCTGcQ:ts3neaW4zheZxZ0vN9WY
+    #   - OPENAI_MODEL=qwen/qwen3-8b
+    #   - OPENAI_URI_BASE=http://192.168.8.133:1234/v1
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
       traefik.http.routers.sure-falkheiland.middlewares: chain-Domain-auth@file
       # Use the default certresolver
       traefik.http.routers.sure-falkheiland.tls.certresolver: ''
+
+  # sure-web:
+  #   environment:
+  #     - AI_DEBUG_MODE=true
+  #     - OPENAI_ACCESS_TOKEN=sk-lm-McFCTGcQ:ts3neaW4zheZxZ0vN9WY
+  #     - OPENAI_MODEL=qwen/qwen3-8b
+  #     - OPENAI_URI_BASE=http://192.168.8.133:1234/v1
 
   sure-db:
     networks:
