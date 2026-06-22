@@ -17,10 +17,6 @@ http:
       basicAuth:
         users:
           - '{{env "BASICAUTH_DEFAULT_USER01"}}'
-    forwardauth-crowdsec-bouncer:
-      forwardAuth:
-        address: http://crowdsec-bouncer-traefik:8080/api/v1/forwardAuth
-        trustForwardHeader: true
     forwardAuth-authentik:
       forwardAuth:
         address: http://authentik:9000/outpost.goauthentik.io/auth/traefik

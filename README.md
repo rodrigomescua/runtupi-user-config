@@ -52,10 +52,6 @@ This highly depends on the used host OS and the hosting itself and is not part o
 
 Since this comes up a lot, here is one thing related to security, when Runtipi is used directly on the internet:
 
-- [ufw on ubuntu](https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#problem):
-  > But when Docker is installed, Docker bypass the UFW rules and the published ports can be accessed from outside
-  - follow the steps from the link above
-  - use your instance behind an additional firewall / nat router.
 - Runtipi offers the ability to expose services to the local domain.
   If this local domain is spoofed and is set to the public IP, than those services are exposed!
   - use a traefik middleware that restricts the access to the effected traefik routers to local ip addresses
@@ -85,18 +81,8 @@ git clone https://github.com/rodrigomescua/runtupi-user-config.git user-config
 # display the user-config dir structure (excerpt)
 # tree -a -d -L 2 user-config/
 user-config/
-├── _archive
-...
 ├── rodrigomescua
 │   ├── arkanum
-...
-├── falkheiland-dev
-├── .git
-...
-├── migrated
-│   ├── 2fauth
-...
-│   └── wekan
 └── traefik
     └── etc
 ...
@@ -224,8 +210,6 @@ cd ~/runtipi && docker compose -f docker-compose.yml -f user-config/tipi-compose
     - [Vaultwarden](./rodrigomescua/vaultwarden/)
     - [Wallos](./rodrigomescua/wallos/)
     - [Wekan](./rodrigomescua/wekan/)
-
-***tbc***
 
 ## Contribution
 
