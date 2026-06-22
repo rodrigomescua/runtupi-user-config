@@ -2,8 +2,8 @@
 
 ## App Store
 
-- URL: https://github.com/falkheiland/runtipi-appstore/tree/prod
-- ID: falkheiland
+- URL: https://github.com/rodrigomescua/runtipi-appstore/tree/prod
+- ID: rodrigomescua
 
 ## Used by
 
@@ -67,7 +67,7 @@
 ## KB
 
 
-edit: ~/runtipi/app-data/falkheiland/bookstack/data/bookstack/config/www/.env
+edit: ~/runtipi/app-data/rodrigomescua/bookstack/data/bookstack/config/www/.env
 
 ```
 # Set OIDC to be the authentication method
@@ -114,7 +114,7 @@ OIDC_ISSUER_DISCOVER=true
 - login with oidc
 - log out
 
-edit: ~/runtipi/app-data/falkheiland/bookstack/data/bookstack/config/www/.env
+edit: ~/runtipi/app-data/rodrigomescua/bookstack/data/bookstack/config/www/.env
 
 - #AUTH_METHOD=oidc
 
@@ -122,7 +122,7 @@ edit: ~/runtipi/app-data/falkheiland/bookstack/data/bookstack/config/www/.env
 - settings > user > choose oidc user > user roles: admin > save
 - logout
 
-edit: ~/runtipi/app-data/falkheiland/bookstack/data/bookstack/config/www/.env
+edit: ~/runtipi/app-data/rodrigomescua/bookstack/data/bookstack/config/www/.env
 
 - AUTH_METHOD=oidc
 - login with OIDC

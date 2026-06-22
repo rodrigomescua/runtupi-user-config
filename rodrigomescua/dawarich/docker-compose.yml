@@ -3,13 +3,14 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.dawarich-falkheiland.middlewares: chain-Domain-auth@file
-      traefik.http.routers.dawarich-falkheiland.tls.certresolver: ''
+      traefik.http.routers.dawarich-rodrigomescua.middlewares: chain-Domain-auth@file
+      traefik.http.routers.dawarich-rodrigomescua.tls.certresolver: ''
       # WebSecure local IP
       # Use additional router for local access
-      traefik.http.routers.dawarich-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.dawarich-falkheiland-privip.middlewares: chain-Domain@file
-      traefik.http.routers.dawarich-falkheiland-privip.entrypoints: websecure
-      traefik.http.routers.dawarich-falkheiland-privip.service: dawarich-falkheiland
-      traefik.http.routers.dawarich-falkheiland-privip.priority: 100
-      traefik.http.routers.dawarich-falkheiland-privip.tls.certresolver: ''
+      traefik.http.routers.dawarich-rodrigomescua-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.dawarich-rodrigomescua-privip.middlewares: chain-Domain@file
+      traefik.http.routers.dawarich-rodrigomescua-privip.entrypoints: websecure
+      traefik.http.routers.dawarich-rodrigomescua-privip.service: dawarich-rodrigomescua
+      traefik.http.routers.dawarich-rodrigomescua-privip.priority: 100
+      traefik.http.routers.dawarich-rodrigomescua-privip.tls.certresolver: ''
+

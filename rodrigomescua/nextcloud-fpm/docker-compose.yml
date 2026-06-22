@@ -3,9 +3,9 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain middleware for domain handling
-      traefik.http.routers.nextcloud-fpm-falkheiland.middlewares: chain-Domain@file
+      traefik.http.routers.nextcloud-fpm-rodrigomescua.middlewares: chain-Domain@file
       # Use the default certresolver
-      traefik.http.routers.nextcloud-fpm-falkheiland.tls.certresolver: ''
+      traefik.http.routers.nextcloud-fpm-rodrigomescua.tls.certresolver: ''
 
   nextcloud-db:
     networks:
@@ -16,10 +16,11 @@ services:
       cupdate.config.stay-on-current-major: true
 
 networks:
-  nextcloud-fpm_falkheiland_network:
+  nextcloud-fpm_rodrigomescua_network:
     external: false
     # Reset to default IPAM configuration to match nextclouds default trusted proxies
     ipam: !reset []
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+

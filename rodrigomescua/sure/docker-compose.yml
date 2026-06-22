@@ -8,9 +8,9 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.sure-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.sure-rodrigomescua.middlewares: chain-Domain-auth@file
       # Use the default certresolver
-      traefik.http.routers.sure-falkheiland.tls.certresolver: ''
+      traefik.http.routers.sure-rodrigomescua.tls.certresolver: ''
 
   # sure-web:
   #   environment:

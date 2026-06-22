@@ -2,5 +2,6 @@
 
 ## App Store
 
-- URL: https://github.com/falkheiland/runtipi-appstore/tree/prod
-- ID: falkheiland
+- URL: https://github.com/rodrigomescua/runtipi-appstore/tree/prod
+- ID: rodrigomescua
+

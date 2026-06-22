@@ -7,30 +7,30 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.poznote-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.poznote-rodrigomescua.middlewares: chain-Domain-auth@file
       # Use the default certresolver
-      traefik.http.routers.poznote-falkheiland.tls.certresolver: ''
+      traefik.http.routers.poznote-rodrigomescua.tls.certresolver: ''
       # WebSecure local IP
       # Use additional router for local access
-      traefik.http.routers.poznote-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.poznote-falkheiland-privip.middlewares: chain-Domain@file
-      traefik.http.routers.poznote-falkheiland-privip.entrypoints: websecure
-      traefik.http.routers.poznote-falkheiland-privip.service: poznote-falkheiland
-      traefik.http.routers.poznote-falkheiland-privip.priority: 100
-      traefik.http.routers.poznote-falkheiland-privip.tls.certresolver: ''
+      traefik.http.routers.poznote-rodrigomescua-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.poznote-rodrigomescua-privip.middlewares: chain-Domain@file
+      traefik.http.routers.poznote-rodrigomescua-privip.entrypoints: websecure
+      traefik.http.routers.poznote-rodrigomescua-privip.service: poznote-rodrigomescua
+      traefik.http.routers.poznote-rodrigomescua-privip.priority: 100
+      traefik.http.routers.poznote-rodrigomescua-privip.tls.certresolver: ''
 
   mcp-server:
     labels:
       # Websecure
       # MCP is machine-to-machine — skip forward auth, use geoblock+headers only
-      traefik.http.routers.poznote-falkheiland-mcp.middlewares: chain-Domain@file
+      traefik.http.routers.poznote-rodrigomescua-mcp.middlewares: chain-Domain@file
       # Use the default certresolver
-      traefik.http.routers.poznote-falkheiland-mcp.tls.certresolver: ''
+      traefik.http.routers.poznote-rodrigomescua-mcp.tls.certresolver: ''
       # WebSecure local IP
       # Use additional router for local access
-      traefik.http.routers.poznote-falkheiland-mcp-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.poznote-falkheiland-mcp-privip.middlewares: chain-Domain@file
-      traefik.http.routers.poznote-falkheiland-mcp-privip.entrypoints: websecure
-      traefik.http.routers.poznote-falkheiland-mcp-privip.service: poznote-falkheiland-mcp
-      traefik.http.routers.poznote-falkheiland-mcp-privip.priority: 100
-      traefik.http.routers.poznote-falkheiland-mcp-privip.tls.certresolver: ''
+      traefik.http.routers.poznote-rodrigomescua-mcp-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.poznote-rodrigomescua-mcp-privip.middlewares: chain-Domain@file
+      traefik.http.routers.poznote-rodrigomescua-mcp-privip.entrypoints: websecure
+      traefik.http.routers.poznote-rodrigomescua-mcp-privip.service: poznote-rodrigomescua-mcp
+      traefik.http.routers.poznote-rodrigomescua-mcp-privip.priority: 100
+      traefik.http.routers.poznote-rodrigomescua-mcp-privip.tls.certresolver: ''

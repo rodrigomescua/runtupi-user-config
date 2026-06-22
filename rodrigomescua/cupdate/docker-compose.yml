@@ -5,6 +5,7 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.cupdate-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.cupdate-rodrigomescua.middlewares: chain-Domain-auth@file
       # Use the default certresolver
-      traefik.http.routers.cupdate-falkheiland.tls.certresolver: ''
+      traefik.http.routers.cupdate-rodrigomescua.tls.certresolver: ''
+

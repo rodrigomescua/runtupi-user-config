@@ -3,14 +3,14 @@ services:
     labels:
       # Websecure
       # Enable catchall domain handling for all services / tipi apps
-      traefik.http.routers.authentik-falkheiland-insecure.rule: HostRegexp(`^.+\.${CATCHALL_DOMAIN}$`)
-      traefik.http.routers.authentik-falkheiland-insecure.priority: 1
-      traefik.http.routers.authentik-falkheiland.rule: HostRegexp(`^.+\.${CATCHALL_DOMAIN}$`)
-      traefik.http.routers.authentik-falkheiland.priority: 1
+      traefik.http.routers.authentik-rodrigomescua-insecure.rule: HostRegexp(`^.+\.${CATCHALL_DOMAIN}$`)
+      traefik.http.routers.authentik-rodrigomescua-insecure.priority: 1
+      traefik.http.routers.authentik-rodrigomescua.rule: HostRegexp(`^.+\.${CATCHALL_DOMAIN}$`)
+      traefik.http.routers.authentik-rodrigomescua.priority: 1
       # Use the chain-Domain middleware for domain handling
-      traefik.http.routers.authentik-falkheiland.middlewares: chain-Domain@file
+      traefik.http.routers.authentik-rodrigomescua.middlewares: chain-Domain@file
       # Use the default certresolver
-      traefik.http.routers.authentik-falkheiland.tls.certresolver: ''
+      traefik.http.routers.authentik-rodrigomescua.tls.certresolver: ''
 
   authentik-db:
     networks:
@@ -24,3 +24,4 @@ networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+

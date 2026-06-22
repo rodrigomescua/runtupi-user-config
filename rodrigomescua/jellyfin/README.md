@@ -2,8 +2,8 @@
 
 ## App Store
 
-- URL: https://github.com/falkheiland/runtipi-appstore/tree/prod
-- ID: falkheiland
+- URL: https://github.com/rodrigomescua/runtipi-appstore/tree/prod
+- ID: rodrigomescua
 
 ## Used by
 
@@ -123,7 +123,7 @@ SSO redirect issue: ` Redirect URI Error The request fails due to a missing, inv
 
 <https://github.com/9p4/jellyfin-plugin-sso/issues/264>
 
-add `<SchemeOverride>https</SchemeOverride>` to ~/runtipi/app-data/falkheiland/jellyfin/data/config/data/plugins/configurations/SSO-Auth.xml
+add `<SchemeOverride>https</SchemeOverride>` to ~/runtipi/app-data/rodrigomescua/jellyfin/data/config/data/plugins/configurations/SSO-Auth.xml
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>

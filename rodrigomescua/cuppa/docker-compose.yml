@@ -3,6 +3,7 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.cuppa-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.cuppa-rodrigomescua.middlewares: chain-Domain-auth@file
       # Use the default certresolver
-      traefik.http.routers.cuppa-falkheiland.tls.certresolver: ''
+      traefik.http.routers.cuppa-rodrigomescua.tls.certresolver: ''
+

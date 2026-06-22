@@ -33,18 +33,18 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.paperless-ngx-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.paperless-ngx-rodrigomescua.middlewares: chain-Domain-auth@file
       # Use the default certresolver
-      traefik.http.routers.paperless-ngx-falkheiland.tls.certresolver: ''
+      traefik.http.routers.paperless-ngx-rodrigomescua.tls.certresolver: ''
       # WebSecure local IP
       # Use additional router for local access
-      traefik.http.routers.paperless-ngx-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.paperless-ngx-falkheiland-privip.middlewares: chain-Domain@file
-      traefik.http.routers.paperless-ngx-falkheiland-privip.entrypoints: websecure
-      traefik.http.routers.paperless-ngx-falkheiland-privip.service: paperless-ngx-falkheiland
-      traefik.http.routers.paperless-ngx-falkheiland-privip.priority: 100
+      traefik.http.routers.paperless-ngx-rodrigomescua-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.paperless-ngx-rodrigomescua-privip.middlewares: chain-Domain@file
+      traefik.http.routers.paperless-ngx-rodrigomescua-privip.entrypoints: websecure
+      traefik.http.routers.paperless-ngx-rodrigomescua-privip.service: paperless-ngx-rodrigomescua
+      traefik.http.routers.paperless-ngx-rodrigomescua-privip.priority: 100
       # Use the default certresolver
-      traefik.http.routers.paperless-ngx-falkheiland-privip.tls.certresolver: ''
+      traefik.http.routers.paperless-ngx-rodrigomescua-privip.tls.certresolver: ''
 
   paperless-ngx-db:
 
@@ -57,3 +57,4 @@ networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+

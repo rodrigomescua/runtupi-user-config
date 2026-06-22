@@ -3,6 +3,7 @@ services:
     labels:
       # Websecure
       # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.prunemate-falkheiland.middlewares: chain-Domain-auth@file
+      traefik.http.routers.prunemate-rodrigomescua.middlewares: chain-Domain-auth@file
       # Use the default certresolver
-      traefik.http.routers.prunemate-falkheiland.tls.certresolver: ''
+      traefik.http.routers.prunemate-rodrigomescua.tls.certresolver: ''
+
