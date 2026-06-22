@@ -7,8 +7,8 @@ services:
     #   - OPENAI_URI_BASE=http://192.168.8.133:1234/v1
     labels:
       # Websecure
-      # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.sure-rodrigomescua.middlewares: chain-Domain-auth@file
+      # Use the chain-public-auth middleware for domain handling
+      traefik.http.routers.sure-rodrigomescua.middlewares: chain-public-auth@file
       # Use the default certresolver
       traefik.http.routers.sure-rodrigomescua.tls.certresolver: ''
 
@@ -31,3 +31,4 @@ networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+

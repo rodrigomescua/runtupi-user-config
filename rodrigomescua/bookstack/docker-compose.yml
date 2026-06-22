@@ -2,8 +2,8 @@ services:
   bookstack:
     labels:
       # Websecure
-      # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.bookstack-rodrigomescua.middlewares: chain-Domain-auth@file
+      # Use the chain-public-auth middleware for domain handling
+      traefik.http.routers.bookstack-rodrigomescua.middlewares: chain-public-auth@file
       # Use the default certresolver
       traefik.http.routers.bookstack-rodrigomescua.tls.certresolver: ''
 
@@ -17,4 +17,5 @@ networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+
 

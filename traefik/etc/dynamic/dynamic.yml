@@ -70,29 +70,29 @@ http:
           X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex,noindex,nofollow" # disable search engines from indexing home server
           server: "" # hide server info from visitors
     # chains
-    chain-localDomain:
+    chain-local:
       chain:
         middlewares:
           - ipAllowList-local
           - rateLimit-default
           - headers-secure
-    chain-localDomain-auth:
+    chain-local-auth:
       chain:
         middlewares:
           - ipAllowList-local
           - rateLimit-default
           - headers-secure
           - forwardAuth-authentik
-    chain-localDomain-deny:
+    chain-local-deny:
       chain:
         middlewares:
           - ipAllowList-none
-    chain-Domain:
+    chain-public:
       chain:
         middlewares:
           - rateLimit-default
           - headers-secure
-    chain-Domain-auth:
+    chain-public-auth:
       chain:
         middlewares:
           - rateLimit-default
@@ -111,7 +111,7 @@ http:
         - "websecure"
       rule: 'Host(`{{env "SERVICE01_FQDN"}}`)'
       middlewares:
-        - chain-Domain-auth
+        - chain-public-auth
       tls:
         options: sniStrictFalse
       service: service01
@@ -120,7 +120,7 @@ http:
         - "websecure"
       rule: 'Host(`{{env "SERVICE01_FQDN"}}`) && ClientIP(`{{env "PRIVATE_IPV4"}}`)'
       middlewares:
-        - chain-Domain
+        - chain-public
       tls:
         options: sniStrictFalse
       service: service01

@@ -125,10 +125,10 @@ The core of this setup is a set of Traefik middleware chains defined in `traefik
 
 | Chain | Usage |
 |---|---|
-| `chain-Domain-auth@file` | Internet-facing apps — rate limit + security headers + Authentik ForwardAuth |
-| `chain-Domain@file` | Internet-facing apps with own auth (e.g. Nextcloud) — no ForwardAuth |
-| `chain-localDomain-auth@file` | Local network access + Authentik ForwardAuth |
-| `chain-localDomain@file` | Local network only, no auth |
+| `chain-public-auth@file` | Internet-facing apps — rate limit + security headers + Authentik ForwardAuth |
+| `chain-public@file` | Internet-facing apps with own auth (e.g. Nextcloud) — no ForwardAuth |
+| `chain-local-auth@file` | Local network access + Authentik ForwardAuth |
+| `chain-local@file` | Local network only, no auth |
 
 ### Per-App Override Pattern
 
@@ -140,7 +140,7 @@ Minimal override for an internet-exposed app with Authentik ForwardAuth:
 services:
   <app-id>:
     labels:
-      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-Domain-auth@file
+      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-public-auth@file
       traefik.http.routers.<app-id>-rodrigomescua.tls.certresolver: ''
 ```
 
@@ -150,10 +150,10 @@ For apps that need both internet access (with auth) and unauthenticated local ne
 services:
   <app-id>:
     labels:
-      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-Domain-auth@file
+      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-public-auth@file
       traefik.http.routers.<app-id>-rodrigomescua.tls.certresolver: ''
       traefik.http.routers.<app-id>-rodrigomescua-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.<app-id>-rodrigomescua-privip.middlewares: chain-Domain@file
+      traefik.http.routers.<app-id>-rodrigomescua-privip.middlewares: chain-public@file
 ```
 
 ## Tips

@@ -2,8 +2,8 @@ services:
   joplin:
     labels:
       # Websecure
-      # Use the chain-Domain middleware for domain handling
-      traefik.http.routers.joplin-rodrigomescua.middlewares: chain-Domain@file
+      # Use the chain-public middleware for domain handling
+      traefik.http.routers.joplin-rodrigomescua.middlewares: chain-public@file
       # Use the default certresolver
       traefik.http.routers.joplin-rodrigomescua.tls.certresolver: ''
 
@@ -17,4 +17,6 @@ networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+
+
 

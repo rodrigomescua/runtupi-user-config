@@ -59,10 +59,10 @@ Defined in `traefik/etc/dynamic/dynamic.yml` as Traefik file provider middleware
 
 | Chain | Usage |
 |---|---|
-| `chain-Domain-auth@file` | Internet-facing apps — rate limit + security headers + Authentik ForwardAuth |
-| `chain-Domain@file` | Internet-facing apps with own auth (e.g. Nextcloud) — no ForwardAuth |
-| `chain-localDomain-auth@file` | Local network + Authentik ForwardAuth |
-| `chain-localDomain@file` | Local network only, no auth |
+| `chain-public-auth@file` | Internet-facing apps — rate limit + security headers + Authentik ForwardAuth |
+| `chain-public@file` | Internet-facing apps with own auth (e.g. Nextcloud) — no ForwardAuth |
+| `chain-local-auth@file` | Local network + Authentik ForwardAuth |
+| `chain-local@file` | Local network only, no auth |
 
 ## Per-App Override Pattern
 
@@ -72,7 +72,7 @@ Each app under `rodrigomescua/<app>/docker-compose.yml` overrides Traefik labels
 services:
   <app-id>:
     labels:
-      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-Domain-auth@file
+      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-public-auth@file
       traefik.http.routers.<app-id>-rodrigomescua.tls.certresolver: ''
 ```
 
@@ -80,7 +80,7 @@ For apps needing both internet access (with auth) and unauthenticated local netw
 
 ```yaml
       traefik.http.routers.<app-id>-rodrigomescua-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.<app-id>-rodrigomescua-privip.middlewares: chain-Domain@file
+      traefik.http.routers.<app-id>-rodrigomescua-privip.middlewares: chain-public@file
 ```
 
 The router name format is always `<app-id>-<username>` (e.g. `jellyfin-rodrigomescua`), matching what Runtipi generates.
@@ -99,5 +99,5 @@ Key variables in `tipi.env` / `tipi.env.example`:
 
 1. Create `rodrigomescua/<app>/docker-compose.yml` with Traefik label overrides
 2. If the app needs extra env vars, create `rodrigomescua/<app>/app.env` (and commit an `app.env.example`)
-3. Use `chain-Domain-auth@file` for ForwardAuth, `chain-Domain@file` for apps with their own auth
+3. Use `chain-public-auth@file` for ForwardAuth, `chain-public@file` for apps with their own auth
 4. Restart the app in Runtipi to apply changes (regenerates `docker-compose.generated.yml`)

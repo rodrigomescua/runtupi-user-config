@@ -7,8 +7,8 @@ services:
       traefik.http.routers.authentik-rodrigomescua-insecure.priority: 1
       traefik.http.routers.authentik-rodrigomescua.rule: HostRegexp(`^.+\.${CATCHALL_DOMAIN}$`)
       traefik.http.routers.authentik-rodrigomescua.priority: 1
-      # Use the chain-Domain middleware for domain handling
-      traefik.http.routers.authentik-rodrigomescua.middlewares: chain-Domain@file
+      # Use the chain-public middleware for domain handling
+      traefik.http.routers.authentik-rodrigomescua.middlewares: chain-public@file
       # Use the default certresolver
       traefik.http.routers.authentik-rodrigomescua.tls.certresolver: ''
 
@@ -24,4 +24,6 @@ networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+
+
 

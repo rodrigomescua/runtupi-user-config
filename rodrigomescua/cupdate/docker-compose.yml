@@ -4,8 +4,9 @@ services:
       - ${APP_DATA_DIR}/data/cupdate-tmp:/tmp
     labels:
       # Websecure
-      # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.cupdate-rodrigomescua.middlewares: chain-Domain-auth@file
+      # Use the chain-public-auth middleware for domain handling
+      traefik.http.routers.cupdate-rodrigomescua.middlewares: chain-public-auth@file
       # Use the default certresolver
       traefik.http.routers.cupdate-rodrigomescua.tls.certresolver: ''
+
 

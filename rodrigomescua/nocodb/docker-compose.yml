@@ -2,14 +2,14 @@ services:
   nocodb:
     labels:
       # Websecure
-      # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.nocodb-rodrigomescua.middlewares: chain-Domain-auth@file
+      # Use the chain-public-auth middleware for domain handling
+      traefik.http.routers.nocodb-rodrigomescua.middlewares: chain-public-auth@file
       # Use the default certresolver
       traefik.http.routers.nocodb-rodrigomescua.tls.certresolver: ''
       # WebSecure local IP
       # Use additional router for local access
       traefik.http.routers.nocodb-rodrigomescua-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.nocodb-rodrigomescua-privip.middlewares: chain-Domain@file
+      traefik.http.routers.nocodb-rodrigomescua-privip.middlewares: chain-public@file
       traefik.http.routers.nocodb-rodrigomescua-privip.entrypoints: websecure
       traefik.http.routers.nocodb-rodrigomescua-privip.service: nocodb-rodrigomescua
       traefik.http.routers.nocodb-rodrigomescua-privip.priority: 100
@@ -25,4 +25,5 @@ networks:
   # This network is shared with the docker-db-backup ap
   shared_docker-db-backup_network:
     external: true
+
 

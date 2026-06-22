@@ -2,8 +2,8 @@ services:
   wekan-app:
     labels:
       # Websecure
-      # Use the chain-Domain middleware for domain handling
-      traefik.http.routers.wekan-rodrigomescua.middlewares: chain-Domain-auth@file
+      # Use the chain-public middleware for domain handling
+      traefik.http.routers.wekan-rodrigomescua.middlewares: chain-public-auth@file
       # Use the default certresolver
       traefik.http.routers.wekan-rodrigomescua.tls.certresolver: ''
       cupdate.config.pin: true
@@ -20,4 +20,6 @@ networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+
+
 

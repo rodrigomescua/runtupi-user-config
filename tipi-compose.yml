@@ -37,8 +37,8 @@ services:
       # Local ip
       traefik.http.routers.dashboard.rule: (Host(`${INTERNAL_IP}`) || Host(`tipi.${LOCAL_DOMAIN}`)) && PathPrefix(`/`)
       # Websecure
-      # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.dashboard-secure.middlewares: chain-Domain-auth@file
+      # Use the chain-public-auth middleware for domain handling
+      traefik.http.routers.dashboard-secure.middlewares: chain-public-auth@file
       # Set the default certresolver to use the wildcard certificate
       traefik.http.routers.dashboard-secure.tls.domains[0].main: ${WILDCARD_DOMAIN}
       traefik.http.routers.dashboard-secure.tls.domains[0].sans: "*.${WILDCARD_DOMAIN}"
@@ -55,18 +55,20 @@ services:
       traefik.http.routers.socket-insecure.rule: Host(`${DOMAIN}`) && PathPrefix(`/api/socket.io`)
       # Set the rule to match the domain and path prefix for secure connections
       traefik.http.routers.socket-secure.rule: Host(`${DOMAIN}`) && PathPrefix(`/api/socket.io`)
-      # Use the chain-Domain-auth middleware for domain handling
-      traefik.http.routers.socket-secure.middlewares: chain-Domain-auth@file
+      # Use the chain-public-auth middleware for domain handling
+      traefik.http.routers.socket-secure.middlewares: chain-public-auth@file
       # Use the default certresolver
       traefik.http.routers.socket-secure.tls.certresolver: ''
       # Local domain
       traefik.http.routers.socket-local-insecure.rule: (Host(`${INTERNAL_IP}`) || Host(`tipi.${LOCAL_DOMAIN}`)) && PathPrefix(`/api/socket.io`)
       # Secure
       traefik.http.routers.socket-local.rule: (Host(`${INTERNAL_IP}`) || Host(`tipi.${LOCAL_DOMAIN}`)) && PathPrefix(`/api/socket.io`)
-      # Use the chain-localDomain middleware for domain handling
-      traefik.http.routers.socket-local.middlewares: chain-localDomain@file
+      # Use the chain-local middleware for domain handling
+      traefik.http.routers.socket-local.middlewares: chain-local@file
 
 networks:
   # This network is shared with the docker-db-backup app
   shared_docker-db-backup_network:
     external: true
+
+

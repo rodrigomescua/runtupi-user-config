@@ -2,8 +2,10 @@ services:
   uptime-kuma:
     labels:
       # Websecure
-      # Use the chain-Domain middleware for domain handling
-      traefik.http.routers.uptime-kuma-rodrigomescua.middlewares: chain-Domain-auth@file
+      # Use the chain-public middleware for domain handling
+      traefik.http.routers.uptime-kuma-rodrigomescua.middlewares: chain-public-auth@file
       # Use the default certresolver
       traefik.http.routers.uptime-kuma-rodrigomescua.tls.certresolver: ''
+
+
 
