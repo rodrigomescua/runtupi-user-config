@@ -26,7 +26,15 @@ Runtipi is aimed at the use behind and via a VPN and or tunnel.
 This repo contains a opinionated user-config that aims at having Runtipi:
 
 - being used with a direct connection to the internet behind a NAT router
-- having advanced configuration like SSO/MFA, IP restrictions etc.
+- having advanced configuration like SSO/MFA and rate limiting
+
+## Credits
+
+This repository is a fork of the original user-config project by Falk Heiland:
+
+- [falkheiland/user-config](https://codeberg.org/falkheiland/user-config)
+
+The structure, app patterns, and much of the configuration approach in this fork are based on that original work.
 
 Placeholders used in this guide, app specific descriptions and in *.example files:
 
@@ -37,20 +45,19 @@ Placeholders used in this guide, app specific descriptions and in *.example file
 
 - working [Runtipi](https://runtipi.io/docs/getting-started/installation) installation (tested with v4.1.0)
 - installed [Authentik](https://github.com/goauthentik/authentik) app (tested with 2025.4.1)
-- installed [crowdsec](https://github.com/crowdsecurity/crowdsec) app and a [account](https://www.crowdsec.net/)
 - a domain managed via [Cloudflare](https://cloudflare.com) DNS with a wildcard entry (ie *.example.com) pointing at your  public IP address
 
 It is also a good measure to follow up on OS hardening.
 This highly depends on the used host OS and the hosting itself and is not part of this repo.
 
-Since this comes up a lot, here are still 2 things related to security, when Runtipi is used directly on the internet:
+Since this comes up a lot, here is one thing related to security, when Runtipi is used directly on the internet:
 
 - [ufw on ubuntu](https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#problem):
   > But when Docker is installed, Docker bypass the UFW rules and the published ports can be accessed from outside
   - follow the steps from the link above
   - use your instance behind an additional firewall / nat router.
 - Runtipi offers the ability to expose services to the local domain.
-If this local domain is spoofed and is set to the public IP, than those services are exposed!
+  If this local domain is spoofed and is set to the public IP, than those services are exposed!
   - use a traefik middleware that restricts the access to the effected traefik routers to local ip addresses
 
 ## Installation
@@ -66,35 +73,21 @@ cd ~/runtipi
 ./runtipi-cli stop
 # stop all containers (in case above command hangs )
 docker stop $(docker ps -a -q)
-# change dir to the app-data
-cd app-data
-# create dir structure for traefik app-data and install traefik plugin geoblock
-mkdir -p app-data/traefik/shared
-mkdir -p app-data/traefik/plugins-local/src/github.com/nscuro/traefik-plugin-geoblock/
-cd app-data/traefik/plugins-local/src/github.com/nscuro/traefik-plugin-geoblock/
-wget https://github.com/nscuro/traefik-plugin-geoblock/releases/download/v0.14.0/traefik-plugin-geoblock-0.14.0.tar.gz
-tar -xzvf traefik-plugin-geoblock-0.14.0.tar.gz
-rm traefik-plugin-geoblock-0.14.0.tar.gz
-cd ~/runtipi
+# create dir structure for traefik app-data
+mkdir -p ~/runtipi/app-data/traefik/shared
 # display the traefik app-data dir structure
 tree -L 5 -a app-data/traefik
 app-data/traefik
-├── plugins-local
-│   └── src
-│       └── github.com
-│           └── nscuro
-│               └── traefik-plugin-geoblock
 └── shared
 # clone the repo
-# !!! it is recommended to fork that repo to your own account and clone from there.
-# !!! this way you can work on and use your own configuration.
-git clone git@github.com:falkheiland/user-config.git
+# clone this fork into the user-config directory for your Runtipi instance
+git clone https://github.com/rodrigomescua/runtupi-user-config.git user-config
 # display the user-config dir structure (excerpt)
 # tree -a -d -L 2 user-config/
 user-config/
 ├── _archive
 ...
-├── falkheiland
+├── rodrigomescua
 │   ├── arkanum
 ...
 ├── falkheiland-dev
@@ -114,14 +107,14 @@ find ./user-config -type f -name "*.example" | while read file; do
     echo "created env file $env_file"
 done
 # results (excerpt)
-created env file ./user-config/falkheiland/authentik/app.env
+created env file ./user-config/rodrigomescua/authentik/app.env
 ...
 created env file ./user-config/tipi.env
 ...
 
 ```
 
-Open and edit each of the files from the result above in an editor of your choice. The `./user-config/tipi-compose.env` contains the necessary env vars for the traefik reverse proxy - it is essential to edit this properly.
+Open and edit each of the files from the result above in an editor of your choice. The `./user-config/tipi.env` contains the necessary env vars for the traefik reverse proxy - it is essential to edit this properly.
 
 ## Getting started
 
@@ -133,7 +126,6 @@ sudo ./runtipi-cli start
   - there should be no errors shown for Routers, Services and Middlewares
   - if there are errors, fix them.
 - open the runtipi GUI
-- start the crowdsec app
 - start the Authentik app
 - open the Authentik GUI and make settings according to the README of each (used) app in the repo
 - start each app after making above settings
@@ -147,14 +139,14 @@ The core of this setup is a set of Traefik middleware chains defined in `traefik
 
 | Chain | Usage |
 |---|---|
-| `chain-Domain-auth@file` | Internet-facing apps — geoblock + rate limit + security headers + Authentik ForwardAuth |
+| `chain-Domain-auth@file` | Internet-facing apps — rate limit + security headers + Authentik ForwardAuth |
 | `chain-Domain@file` | Internet-facing apps with own auth (e.g. Nextcloud) — no ForwardAuth |
 | `chain-localDomain-auth@file` | Local network access + Authentik ForwardAuth |
 | `chain-localDomain@file` | Local network only, no auth |
 
 ### Per-App Override Pattern
 
-Each app gets a `falkheiland/<app>/docker-compose.yml` that overrides the Traefik labels Runtipi generates. The router name format is always `<app-id>-<username>` (e.g. `jellyfin-falkheiland`).
+Each app gets a `rodrigomescua/<app>/docker-compose.yml` that overrides the Traefik labels Runtipi generates. The router name format is always `<app-id>-<username>` (e.g. `jellyfin-rodrigomescua`).
 
 Minimal override for an internet-exposed app with Authentik ForwardAuth:
 
@@ -162,8 +154,8 @@ Minimal override for an internet-exposed app with Authentik ForwardAuth:
 services:
   <app-id>:
     labels:
-      traefik.http.routers.<app-id>-falkheiland.middlewares: chain-Domain-auth@file
-      traefik.http.routers.<app-id>-falkheiland.tls.certresolver: ''
+      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-Domain-auth@file
+      traefik.http.routers.<app-id>-rodrigomescua.tls.certresolver: ''
 ```
 
 For apps that need both internet access (with auth) and unauthenticated local network access, add a `-privip` router variant:
@@ -172,10 +164,10 @@ For apps that need both internet access (with auth) and unauthenticated local ne
 services:
   <app-id>:
     labels:
-      traefik.http.routers.<app-id>-falkheiland.middlewares: chain-Domain-auth@file
-      traefik.http.routers.<app-id>-falkheiland.tls.certresolver: ''
-      traefik.http.routers.<app-id>-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
-      traefik.http.routers.<app-id>-falkheiland-privip.middlewares: chain-Domain@file
+      traefik.http.routers.<app-id>-rodrigomescua.middlewares: chain-Domain-auth@file
+      traefik.http.routers.<app-id>-rodrigomescua.tls.certresolver: ''
+      traefik.http.routers.<app-id>-rodrigomescua-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.<app-id>-rodrigomescua-privip.middlewares: chain-Domain@file
 ```
 
 ## Tips
@@ -183,10 +175,10 @@ services:
 start tipi app without tipi
 
 ```bash
-docker compose --env-file app-data/crowdsec/app.env --env-file user-config/crowdsec/app.env --project-name crowdsec -f apps/crowdsec/docker-compose.yml -f repos/c5e7315954cfe5ab1eb1bf360ebada23b6a406ae66ae1e997854ad823f29aa7d/apps/docker-compose.common.yml --file user-config/crowdsec/docker-compose.yml up --detach --force-recreate --remove-orphans
+docker compose --env-file app-data/<app>/app.env --env-file user-config/<app>/app.env --project-name <app> -f apps/<app>/docker-compose.yml -f repos/<hash>/apps/docker-compose.common.yml --file user-config/<app>/docker-compose.yml up --detach --force-recreate --remove-orphans
 ```
 
-update/recreate traefik container without affecting other containers (e.g. after updating the image version or changing env vars in `tipi.env` like `PLUGIN_GEOBLOCK_ALLOWEDCOUNTRIES`)
+update/recreate traefik container without affecting other containers (e.g. after updating the image version or changing env vars in `tipi.env`)
 
 ```bash
 cd ~/runtipi && docker compose -f docker-compose.yml -f user-config/tipi-compose.yml up -d --no-deps --force-recreate runtipi-reverse-proxy
@@ -195,43 +187,43 @@ cd ~/runtipi && docker compose -f docker-compose.yml -f user-config/tipi-compose
 ## Documentation
 
 - Apps
-  - falkheiland
-    - [2FAuth](./falkheiland/2fauth/)
-    - [Arkanum](./falkheiland/arkanum/)
-    - [Authentik](./falkheiland/authentik/)
-    - [Bookstack](./falkheiland/bookstack/)
-    - [Crowdsec](./falkheiland/crowdsec/)
-    - [Cup](./falkheiland/cup/)
-    - [CUPdate](./falkheiland/cupdate/)
-    - [Dawarich](./falkheiland/dawarich/)
-    - [DDNS-Updater-CF](./falkheiland/ddns-updater-cf/)
-    - [docker-db-backup](./falkheiland/docker-db-backup/)
-    - [Dozzle](./falkheiland/dozzle/)
-    - [Forgejo](./falkheiland/forgejo/)
-    - [Freshrss-OIDC](./falkheiland/freshrss-oidc/)
-    - [GHarmonize](./falkheiland/gharmonize/)
-    - [Home Assistant](./falkheiland/homeassistant/)
-    - [Immich](./falkheiland/immich/)
-    - [IT-Tools](./falkheiland/it-tools/)
-    - [Jellyfin](./falkheiland/jellyfin/)
-    - [Joplin Server](./falkheiland/joplin/)
-    - [Linkwarden](./falkheiland/linkwarden/)
-    - [MeTube](./falkheiland/metube/)
-    - [Moodist](./falkheiland/moodist/)
-    - [Navidrome](./falkheiland/navidrome/)
-    - [Networking Toolbox](./falkheiland/networking-toolbox/)
-    - [Nextcloud-FPM](./falkheiland/nextcloud-fpm/)
-    - [NocoDB](./falkheiland/nocodb/)
-    - [Paperless-ngx](./falkheiland/paperless-ngx/)
-    - [Pinchflat](./falkheiland/pinchflat/)
-    - [PruneMate](./falkheiland/prunemate/)
-    - [SearXNG](./falkheiland/searxng/)
-    - [Sure](./falkheiland/sure/)
-    - [Surmai](./falkheiland/surmai/)
-    - [Uptime Kuma](./falkheiland/uptime-kuma/)
-    - [Vaultwarden](./falkheiland/vaultwarden/)
-    - [Wallos](./falkheiland/wallos/)
-    - [Wekan](./falkheiland/wekan/)
+  - rodrigomescua
+    - [2FAuth](./rodrigomescua/2fauth/)
+    - [Arkanum](./rodrigomescua/arkanum/)
+    - [Authentik](./rodrigomescua/authentik/)
+    - [Bookstack](./rodrigomescua/bookstack/)
+    - [Cup](./rodrigomescua/cup/)
+    - [CUPdate](./rodrigomescua/cupdate/)
+    - [Cuppa](./rodrigomescua/cuppa/)
+    - [Dawarich](./rodrigomescua/dawarich/)
+    - [DDNS-Updater-CF](./rodrigomescua/ddns-updater-cf/)
+    - [docker-db-backup](./rodrigomescua/docker-db-backup/)
+    - [Dozzle](./rodrigomescua/dozzle/)
+    - [Forgejo](./rodrigomescua/forgejo/)
+    - [Freshrss-OIDC](./rodrigomescua/freshrss-oidc/)
+    - [GHarmonize](./rodrigomescua/gharmonize/)
+    - [Home Assistant](./rodrigomescua/homeassistant/)
+    - [Immich](./rodrigomescua/immich/)
+    - [IT-Tools](./rodrigomescua/it-tools/)
+    - [Jellyfin](./rodrigomescua/jellyfin/)
+    - [Joplin Server](./rodrigomescua/joplin/)
+    - [Linkwarden](./rodrigomescua/linkwarden/)
+    - [MeTube](./rodrigomescua/metube/)
+    - [Moodist](./rodrigomescua/moodist/)
+    - [Navidrome](./rodrigomescua/navidrome/)
+    - [Networking Toolbox](./rodrigomescua/networking-toolbox/)
+    - [Nextcloud-FPM](./rodrigomescua/nextcloud-fpm/)
+    - [NocoDB](./rodrigomescua/nocodb/)
+    - [Paperless-ngx](./rodrigomescua/paperless-ngx/)
+    - [Pinchflat](./rodrigomescua/pinchflat/)
+    - [PruneMate](./rodrigomescua/prunemate/)
+    - [SearXNG](./rodrigomescua/searxng/)
+    - [Sure](./rodrigomescua/sure/)
+    - [Surmai](./rodrigomescua/surmai/)
+    - [Uptime Kuma](./rodrigomescua/uptime-kuma/)
+    - [Vaultwarden](./rodrigomescua/vaultwarden/)
+    - [Wallos](./rodrigomescua/wallos/)
+    - [Wekan](./rodrigomescua/wekan/)
 
 ***tbc***
 
