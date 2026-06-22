@@ -1,0 +1,36 @@
+services:
+  webserver:
+    environment:
+      - POZNOTE_OIDC_CLIENT_ID=${POZNOTE_OIDC_CLIENT_ID}
+      - POZNOTE_OIDC_CLIENT_SECRET=${POZNOTE_OIDC_CLIENT_SECRET}
+      - POZNOTE_OIDC_DISABLE_NORMAL_LOGIN=${POZNOTE_OIDC_DISABLE_NORMAL_LOGIN}
+    labels:
+      # Websecure
+      # Use the chain-Domain-auth middleware for domain handling
+      traefik.http.routers.poznote-falkheiland.middlewares: chain-Domain-auth@file
+      # Use the default certresolver
+      traefik.http.routers.poznote-falkheiland.tls.certresolver: ''
+      # WebSecure local IP
+      # Use additional router for local access
+      traefik.http.routers.poznote-falkheiland-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.poznote-falkheiland-privip.middlewares: chain-Domain@file
+      traefik.http.routers.poznote-falkheiland-privip.entrypoints: websecure
+      traefik.http.routers.poznote-falkheiland-privip.service: poznote-falkheiland
+      traefik.http.routers.poznote-falkheiland-privip.priority: 100
+      traefik.http.routers.poznote-falkheiland-privip.tls.certresolver: ''
+
+  mcp-server:
+    labels:
+      # Websecure
+      # MCP is machine-to-machine — skip forward auth, use geoblock+headers only
+      traefik.http.routers.poznote-falkheiland-mcp.middlewares: chain-Domain@file
+      # Use the default certresolver
+      traefik.http.routers.poznote-falkheiland-mcp.tls.certresolver: ''
+      # WebSecure local IP
+      # Use additional router for local access
+      traefik.http.routers.poznote-falkheiland-mcp-privip.rule: Host(`${APP_DOMAIN}`) && ClientIP(`${PRIVATE_IPV4}`)
+      traefik.http.routers.poznote-falkheiland-mcp-privip.middlewares: chain-Domain@file
+      traefik.http.routers.poznote-falkheiland-mcp-privip.entrypoints: websecure
+      traefik.http.routers.poznote-falkheiland-mcp-privip.service: poznote-falkheiland-mcp
+      traefik.http.routers.poznote-falkheiland-mcp-privip.priority: 100
+      traefik.http.routers.poznote-falkheiland-mcp-privip.tls.certresolver: ''
